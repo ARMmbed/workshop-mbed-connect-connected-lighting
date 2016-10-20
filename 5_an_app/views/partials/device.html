@@ -1,0 +1,12 @@
+<li data-endpoint="{{name}}">
+  <div class="color" data-value="{{rawColor}}" style="background-color: {{color}}"></div>
+  <div class="right-col">
+    <p class="endpoint change-endpoint-name">{{name}}</p>
+    <p class="timeout">Motion timeout: <a href="#" class="change-timeout">{{timeout}} seconds</a></p>
+    <div class="status">
+      <div class="change-status {{motionClass}}" data-action="0">Motion</div>
+      <div class="change-status {{onClass}}" data-action="1">On</div>
+      <div class="change-status {{offClass}}" data-action="2">Off</div>
+    </div>
+  </div>
+</li>

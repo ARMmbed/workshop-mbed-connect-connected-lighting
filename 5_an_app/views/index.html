@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Light System</title>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="import" href="/color-picker-element/dist/color-picker.html">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+</head>
+
+<body>
+  <div id="header">
+    <a href="/"><img id="logo" src="/ARMmbedLogo.svg"></a>
+  </div>
+
+  <h1>Lights</h1>
+
+  <ul id="lights">
+  {{#devices}}
+    {{> device}}
+  {{/devices}}
+  </ul>
+
+  <div id="color-picker-overlay" style="display: none">
+    <h2>Change color</h2>
+  </div>
+  <div id="notification" style="opacity: 0; visibility: hidden;"></div>
+
+  <script src="/helper-functions.js"></script>
+  <script src="/color-picker.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    /*global io getElement updateStatusUi getDeviceName showNotification localStorage */
+
+    // Here is how we connect back to the server
+    var socket = io.connect(location.origin);
+
+    // ==== BEGIN SERVER EVENTS ====
+
+    var createDeviceEv, deleteDeviceEv, changeStatusEv, changeColorEv, changeTimeoutEv;
+
+    // Device came online, add it to the UI
+    socket.on('created-device', createDeviceEv = function(viewModel) {
+      document.querySelector('#lights').insertAdjacentHTML('beforeend', viewModel.html);
+    });
+
+    // Device was deleted, remove it from the UI
+    socket.on('deleted-device', deleteDeviceEv = function(endpoint) {
+      var li = getElement(endpoint);
+      li.parentNode.removeChild(li);
+
+      showNotification(getDeviceName(endpoint, true) + ' was de-registered');
+    });
+
+    // Status of a device was updated
+    socket.on('change-status', changeStatusEv = function(endpoint, status) {
+      updateStatusUi(endpoint, status);
+    });
+
+    // Color of a device was updated
+    socket.on('change-color', changeColorEv = function(endpoint, color) {
+      var hex = Number(color).toString(16);
+      getElement(endpoint).querySelector('.color').style.backgroundColor =
+        '#' + '000000'.substring(0, 6 - hex.length) + hex;
+    });
+
+    // Timeout of a device was updated
+    socket.on('change-timeout', changeTimeoutEv = function(endpoint, timeout) {
+      getElement(endpoint).querySelector('.change-timeout').textContent =
+        timeout + ' seconds';
+    });
+
+    // When you go offline=>online, server will automatically send current state
+    // So you're always up to date with other clients.
+    socket.on('device-list', function(list) {
+      list.forEach(function(device) {
+        // element not in the UI yet? Create it!
+        if (!getElement(device.endpoint)) {
+          return createDeviceEv(device.view);
+        }
+
+        // otherwise, update the properties
+        changeStatusEv(device.endpoint, device.view.model.status);
+        changeColorEv(device.endpoint, device.view.model.rawColor);
+        changeTimeoutEv(device.endpoint, device.view.model.timeout);
+      });
+
+      // find devices that are still in the UI, but no longer in the list...
+      var validEndpoints = list.map(function(device) { return device.endpoint; });
+      [].forEach.call(document.querySelectorAll('li[data-endpoint]'), function(li) {
+        if (validEndpoints.indexOf(li.dataset.endpoint) === -1) {
+          deleteDeviceEv(li.dataset.endpoint);
+        }
+      });
+
+    });
+
+    // ==== END OF SERVER EVENTS ====
+
+
+
+    // ==== BEGIN UI EVENTS ====
+
+    // When someone clicks on an element in the device area...
+    document.querySelector('#lights').addEventListener('click', function(e) {
+
+      // We look at which endpoint we're clicking on...
+      var parent = e.target;
+      while (e.target.parentElement && !((parent = parent.parentElement).dataset.endpoint)) {
+        // noop
+      }
+      if (!parent.dataset.endpoint) return console.error('Could not find parent for', e.target);
+
+      var endpoint = parent.dataset.endpoint;
+
+      // Now we can check which element we clicked on:
+      if (e.target.classList.contains('change-timeout')) {
+        changeTimeout(endpoint, e.target);
+        return false;
+      }
+
+      if (e.target.classList.contains('change-status')) {
+        changeStatus(endpoint, e.target);
+        return false;
+      }
+
+      // Names are stored locally...
+      if (e.target.classList.contains('change-endpoint-name')) {
+        var n = prompt('Enter new name');
+        if (n) {
+          e.target.textContent = n;
+          localStorage.setItem(endpoint + '-name', n);
+        }
+        else if (n === '') {
+          e.target.textContent = endpoint;
+          localStorage.setItem(endpoint + '-name', '');
+        }
+        return false;
+      }
+
+      // Click on color => show color picker
+      if (e.target.classList.contains('color')) {
+        var cp = document.querySelector('#color-picker-overlay');
+        cp.dataset.endpoint = endpoint;
+        cp.style.display = 'flex';
+        return false;
+      }
+    });
+
+    // ==== END UI EVENTS ====
+
+
+
+    // ==== BEGIN UI ACTIONS ====
+
+    function changeTimeout(endpoint, el) {
+      var old = el.textContent.split(' ')[0];
+
+      // Ask for a new value and verify that it's a number
+      var v = prompt('Enter a new value for the motion timeout');
+      if (v === false) return;
+      if (!v || isNaN(v)) {
+        return showNotification('Updating timeout failed: not a number');
+      }
+
+      // Update the UI
+      el.textContent = v + ' seconds';
+      // Send to the server
+      socket.emit('change-timeout', endpoint, Number(v), function(err) {
+        // If it fails, reset to old value and show notification
+        if (err) {
+          el.textContent = old + ' seconds';
+          showNotification('Updating timeout failed: ' + err);
+        }
+      });
+    }
+
+    function changeStatus(endpoint, el) {
+      // get the currently selected value
+      var old = el.parentNode.querySelector('.selected').dataset.action;
+
+      // update the UI
+      updateStatusUi(endpoint, el.dataset.action);
+
+      // send to server
+      socket.emit('change-status', endpoint, Number(el.dataset.action), function(err) {
+        // if it fails, reset to old value and show notification
+        if (err) {
+          updateStatusUi(endpoint, old);
+          showNotification('Updating status failed: ' + err);
+        }
+      });
+    }
+
+    function changeColor(endpoint, newColor) {
+      var colorEl = getElement(endpoint).querySelector('.color');
+      var oldHex = Number(colorEl.dataset.value).toString(16);
+      var newHex = Number(newColor).toString(16);
+
+      if (newColor === 0) return;
+
+      console.log('new value is', newColor);
+
+      // Update UI
+      colorEl.style.backgroundColor = '#' + '000000'.substring(0, 6 - newHex.length) + newHex;
+
+      // Send to server
+      socket.emit('change-color', endpoint, newColor, function(err) {
+        // If all fails, reset back to old color
+        if (err) {
+          colorEl.style.backgroundColor = '#' + '000000'.substring(0, 6 - oldHex.length) + oldHex;
+          showNotification('Updating color failed: ' + err);
+        }
+      });
+    }
+
+    // ==== END UI ACTIONS ====
+
+
+
+    // YOUR CODE HERE !!!
+
+  </script>
+
+</body>
+</html>

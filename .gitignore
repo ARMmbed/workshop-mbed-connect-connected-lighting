@@ -1,0 +1,11 @@
+mbed_settings.py
+*.pyc
+.build/
+.mbed
+security.h
+BUILD/
+simple-mbed-client/
+ChainableLED/
+esp8266-driver/
+mbed-os/
+node_modules/

@@ -1,0 +1,12 @@
+{
+  "name": "4_from_code",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Connect to your device from code",
+  "main": "main.js",
+  "author": "Jan Jongboom <jan.jongboom@arm.com>",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "mbed-connector-api": "^2.0.0"
+  }
+}
