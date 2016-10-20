@@ -20,7 +20,6 @@ On your computer:
 
 1. Install a recent version of [node.js](https://nodejs.org) (4.x or higher).
 1. Download the source code for this workshop from [here](https://github.com/ARMmbed/workshop-mbed-connect-connected-lighting) - and unpack in a convenient location.
-1.
 
 If you are on Windows, also install:
 
