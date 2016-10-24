@@ -33,11 +33,11 @@ If you are on Windows, also install:
 
 1. Attach the Grove base shield to your development board.
 1. Attach the following components to the Grove shield:
-    * WiFi module to `D2`.
-    * Put a jumper wire from `D3` to `D8`.
+    * WiFi module to Grove `D2`.
+    * Put a jumper wire from *Pin* `D3` to `D8`.
     ![wiring](img/wiring-wifi.png)
-    * LED to `D6` (to INPUT port on LED).
-    * Accelerometer to `I2C`.
+    * LED to Grove `D6` (to INPUT port on LED).
+    * Accelerometer to any Grove `I2C` port.
 1. Connect the NUCLEO F411RE board to your computer.
 1. The board mounts as a mass-storage device (like a USB drive). Verify that you can see it (the drive name will be NUCLEO).
 1. Double-click on `mbed.htm` - you'll be redirected to the [F411RE platform page](https://developer.mbed.org/platforms/ST-Nucleo-F411RE/).
@@ -54,7 +54,7 @@ We'll run a program that will turn the LED on whenever motion is detected.
 
 1. Make sure that you have the online compiler open.
 1. Click the Import button, then click **Click Here to import from URL**.
-1. Paste the following URL: https://github.com/ARMmbed/workshop-ada-lovelace-ble.
+1. Paste the following URL: https://github.com/ARMmbed/workshop-mbed-connect-connected-lighting.
 1. Click the **Import** button.
 1. In the top right corner, verify that the right development board is selected (NUCLEO F411RE).
 
