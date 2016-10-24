@@ -70,7 +70,7 @@ void onPirTimeout() {
   rgbLed.setColorRGB(0, 0x0, 0x0, 0x0);
 }
 
-void movement() {
+void pir_rise() {
   printf("Movement detected\r\n");
 
   // Set the color to green
