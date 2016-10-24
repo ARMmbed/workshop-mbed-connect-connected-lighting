@@ -4,14 +4,13 @@
 #include "easy-connect.h"                     // Connectivity driver
 #include "simple-mbed-client.h"               // Load mbed Client
 #include "ChainableLED.h"                     // Driver for the LED
+#include "accelerometer.h"
 
 SimpleMbedClient client;          // Get a reference to Client
 
 // Our peripherals
-InterruptIn pir(A5);              // Declare the PIR sensor
+Accelerometer accelerometer(10, true);
 ChainableLED rgbLed(D6, D7, 1);   // Declare the LED (it's chainable!)
-
-DigitalOut highPin(A4, 1);
 
 // We need a way to signal from an interrupt context -> main thread, use a Semaphore for it...
 Semaphore updates(0);
@@ -113,7 +112,8 @@ int main(int, char**) {
   putLightsOff();
 
   // The PIR sensor uses interrupts, no need to poll
-  pir.rise(&pir_rise);
+  accelerometer.start();
+  accelerometer.change(&pir_rise);
 
   // Connect to the internet (using connectivity method from mbed_app.json)
   NetworkInterface* network = easy_connect(true);

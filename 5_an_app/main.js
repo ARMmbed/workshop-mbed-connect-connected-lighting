@@ -71,6 +71,7 @@ var options = {
       subscribe: '/pir/0/count'                       // subscribe to updates
     }
   },
+  timeout: 20000,
   mapToView: mapToView,
   verbose: true                         // Verbose logging
 };
