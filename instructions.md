@@ -34,9 +34,9 @@ If you are on Windows, also install:
 1. Attach the Grove base shield to your development board.
 1. Attach the following components to the Grove shield:
     * WiFi module to `D2`.
-    * Put a jumper wire from `D3` to `D8`.  
+    * Put a jumper wire from `D3` to `D8`.
     ![wiring](img/wiring-wifi.png)
-    * LED to `D6`.
+    * LED to `D6` (to INPUT port on LED).
     * Accelerometer to `I2C`.
 1. Attach the BLE Shield to your development board.
 1. Connect the NUCLEO F411RE board to your computer.
