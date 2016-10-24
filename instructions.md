@@ -311,10 +311,12 @@ Web server listening on port 5265!
 
 ### On your mobile phone
 
-You can also see the page on your mobile phone. In the node.js log there's a line similar to `en0 192.168.1.11`.
+You can also see the page on your mobile phone.
 
-1. Connect to the same WiFi network as your laptop.
-1. On your phone go to http://192.168.1.11:5265.
+1. Look in the node.js output when you started 5_an_app (in the terminal).
+1. Find a line similar to `en0 192.168.1.11`, that's your IP address.
+1. Connect your phone to the same WiFi network as your **laptop** (not the same network as your device).
+1. On your phone go to http://YOUR_IP:5265 (like http://192.168.1.11:5625).
 1. See the same control app.
 1. If you change something on the phone it also changes on your laptop!
 1. On Chrome for Mobile? Click 'Add to homescreen' and it will look just like a real app =).
