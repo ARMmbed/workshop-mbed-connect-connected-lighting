@@ -218,7 +218,7 @@ We can also write new values to the device.
 We can also write some code to interact with this device.
 
 1. Install a recent version of [node.js](https://nodejs.org) (4.x or higher).
-1. Download the source code for this workshop from [here](https://github.com/ARMmbed/workshop-mbed-connect-connected-lighting) - and unpack in a convenient location.
+1. Download the source code for this workshop from [here](https://github.com/ARMmbed/workshop-mbed-connect-connected-lighting/archive/master.zip) - and unpack in a convenient location.
 1. Open a terminal or a command window.
 1. Change directory to the folder where you download the `workshop-mbed-connect-connected-lighting` repository.
 1. Run `cd 4_from_code`.
