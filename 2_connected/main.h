@@ -1,6 +1,5 @@
 #include "mbed.h"
 #include "rtos.h"
-#include "EthernetInterface.h"                // Load the network driver
 #include "security.h"                         // Load the security certificate
 #include "easy-connect.h"                     // Connectivity driver
 #include "simple-mbed-client.h"               // Load mbed Client

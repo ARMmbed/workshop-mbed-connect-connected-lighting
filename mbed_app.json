@@ -7,26 +7,27 @@
         },
         "network-interface":{
             "help": "options are ETHERNET,WIFI_ESP8266,MESH_LOWPAN_ND,MESH_THREAD",
-            "value": "ETHERNET"
+            "value": "WIFI_ESP8266"
         },
         "esp8266-tx": {
             "help": "Pin used as TX (connects to ESP8266 RX)",
-            "value": "PTD3"
+            "value": "D8"
         },
         "esp8266-rx": {
             "help": "Pin used as RX (connects to ESP8266 TX)",
-            "value": "PTD2"
+            "value": "D2"
         },
         "esp8266-ssid": {
-            "value": "\"SSID\""
+            "value": "\"mbedconnect\""
         },
         "esp8266-password": {
-            "value": "\"Password\""
+            "value": "\"Connect2016\""
         },
         "esp8266-debug": {
             "value": true
         }
     },
+    "macros": ["MBEDTLS_USER_CONFIG_FILE=\"mbedtls_mbed_client_config.h\"", "MBEDTLS_NO_DEFAULT_ENTROPY_SOURCES", "MBEDTLS_TEST_NULL_ENTROPY"],
     "target_overrides": {
         "NRF51_DK": {
             "ble_button_pin_name": "BUTTON1"
