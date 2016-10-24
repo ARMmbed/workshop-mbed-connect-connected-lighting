@@ -18,10 +18,10 @@
             "value": "D2"
         },
         "esp8266-ssid": {
-            "value": "\"MIFI-LIBERATE-MBED\""
+            "value": "\"mbed-device\""
         },
         "esp8266-password": {
-            "value": "\"33642678\""
+            "value": "\"mbed2014\""
         },
         "esp8266-debug": {
             "value": true
