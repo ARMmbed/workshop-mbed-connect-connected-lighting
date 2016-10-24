@@ -33,7 +33,7 @@ If you are on Windows, also install:
 
 1. Attach the Grove base shield to your development board.
 1. Attach the following components to the Grove shield:
-    * WiFi module to `UART`.
+    * WiFi module, on the blue headers, yellow to `D2`, white to `D8`, black to `GND`, red to `3.3V`.
     * LED to `D6`.
     * If you have a PIR sensor, attach it to `D5`.
     * If you have an accelerometer, attach it to `I2C`.
@@ -70,7 +70,7 @@ void onPirTimeout() {
   rgbLed.setColorRGB(0, 0x0, 0x0, 0x0);
 }
 
-void pir_rise() {
+void movement() {
   printf("Movement detected\r\n");
 
   // Set the color to green
