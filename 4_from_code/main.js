@@ -21,21 +21,6 @@ api.startLongPolling(function(err) {
     var endpoint = devices[0].name;
     
     // YOUR CODE HERE
-    api.putResourceSubscription(endpoint, '/pir/0/count', function(err) {
-      console.log('Set subscription for pir count', err);
-    });
-    
-    api.putResourceValue(endpoint, '/led/0/permanent_status', 1, function(err) {
-      if (err) return console.error('Failed to set status...', err);
-      
-      console.log('Set status to 1...');
-      
-      api.putResourceValue(endpoint, '/led/0/color', 0xffa500, function(err) {
-        if (err) return console.error('Failed to set color...', err);
-        
-        console.log('Set color to orange!');
-      });
-    });
 
 
 

@@ -38,7 +38,6 @@ If you are on Windows, also install:
     ![wiring](img/wiring-wifi.png)
     * LED to `D6`.
     * Accelerometer to `I2C`.
-    * We did not manage to source the PIR sensors in time. Use a jumper wire to connect A4 to A5 to trigger a motion action.
 1. Attach the BLE Shield to your development board.
 1. Connect the NUCLEO F411RE board to your computer.
 1. The board mounts as a mass-storage device (like a USB drive). Verify that you can see it (the drive name will be NUCLEO).
