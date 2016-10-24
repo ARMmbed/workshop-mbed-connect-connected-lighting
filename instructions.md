@@ -33,8 +33,11 @@ If you are on Windows, also install:
 
 1. Attach the Grove base shield to your development board.
 1. Attach the following components to the Grove shield:
-    * WiFi module, on the blue headers, yellow to `D2`, white to `D8`, black to `GND`, red to `3.3V`.
+    * WiFi module to `D2`.
+    * Put a jumper wire from `D3` to `D8`.  
+    ![wiring](img/wiring-wifi.png)
     * LED to `D6`.
+    * Accelerometer to `I2C`.
     * We did not manage to source the PIR sensors in time. Use a jumper wire to connect A4 to A5 to trigger a motion action.
 1. Attach the BLE Shield to your development board.
 1. Connect the NUCLEO F411RE board to your computer.
