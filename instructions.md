@@ -54,7 +54,7 @@ We'll run a program that will turn the LED on whenever motion is detected.
 
 1. Make sure that you have the online compiler open.
 1. Click the Import button, then click **Click Here to import from URL**.
-1. Paste the following URL: https://github.com/ARMmbed/workshop-mbed-connect-connected-lighting.
+1. Paste the following URL: https://github.com/ARMmbed/workshop-mbed-connect-connected-lighting
 1. Click the **Import** button.
 1. In the top right corner, verify that the right development board is selected (NUCLEO F411RE).
 
