@@ -4,7 +4,6 @@
 #include "easy-connect.h"                     // Connectivity driver
 #include "simple-mbed-client.h"               // Load mbed Client
 #include "ChainableLED.h"                     // Driver for the LED
-#include "accelerometer.h"                    // Driver for the accelerometer
 
 SimpleMbedClient client;          // Get a reference to Client
 
@@ -79,33 +78,25 @@ void colorChanged(int newColor) {
   }
 }
 
+enum InterruptState {
+  STATE_NONE = 0,
+  STATE_PIR_RISE = 1,
+  STATE_PIR_TIMEOUT = 2
+};
+InterruptState state = STATE_NONE;
+
 // Timeout (from led/0/timeout) happened after PIR sensor was triggered...
 void onPirTimeout() {
-  // if we're not permanent on
-  if (ledStatus != STATUS_ON) {
-    // clear the lights
-    putLightsOff();
-
-    ledOnBecauseOfPir = false;
-  }
+  state = STATE_PIR_TIMEOUT;
+  // go back to main thread to update the resource (we can't do this in interrupt context)
+  updates.release();
 }
 
 // When the motion sensor fires...
 void pir_rise() {
-  printf("Motion Sensor fired\r\n");
-
+  state = STATE_PIR_RISE;
   // go back to main thread to update the resource (we can't do this in interrupt context)
   updates.release();
-
-  // Permanent off? Don't put the lights on...
-  if (ledStatus == STATUS_OFF) return;
-
-  // Otherwise do it!
-  ledOnBecauseOfPir = true;
-  putLightsOn();
-
-  // And attach the timeout
-  pirTimeout.attach(&onPirTimeout, static_cast<float>(ledTimeout));
 }
 
 // Registered callback for mbed Client
@@ -145,7 +136,35 @@ int main(int, char**) {
   while (1) {
     int v = updates.wait(25000);
     if (v == 1) {
-      pirCount = pirCount + 1;
+      printf("Semaphore released, state %d\r\n", state);
+
+      switch (state) {
+        case STATE_PIR_RISE:
+          pirCount = pirCount + 1;
+
+          // Permanent off? Don't put the lights on...
+          if (ledStatus == STATUS_OFF) continue;
+
+          // Otherwise do it!
+          ledOnBecauseOfPir = true;
+          putLightsOn();
+
+          // And attach the timeout
+          pirTimeout.attach(&onPirTimeout, static_cast<float>(ledTimeout));
+          break;
+
+        case STATE_PIR_TIMEOUT:
+          // if we're not permanent on
+          if (ledStatus != STATUS_ON) {
+           // clear the lights
+           putLightsOff();
+
+           ledOnBecauseOfPir = false;
+          }
+          break;
+      }
+
+      state = STATE_NONE;
     }
     if (isRegistered) {
       client.keep_alive();

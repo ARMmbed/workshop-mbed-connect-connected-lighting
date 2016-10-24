@@ -35,8 +35,7 @@ If you are on Windows, also install:
 1. Attach the following components to the Grove shield:
     * WiFi module, on the blue headers, yellow to `D2`, white to `D8`, black to `GND`, red to `3.3V`.
     * LED to `D6`.
-    * If you have a PIR sensor, attach it to `D5`.
-    * If you have an accelerometer, attach it to `I2C`.
+    * We did not manage to source the PIR sensors in time. Use a jumper wire to connect A4 to A5 to trigger a motion action.
 1. Attach the BLE Shield to your development board.
 1. Connect the NUCLEO F411RE board to your computer.
 1. The board mounts as a mass-storage device (like a USB drive). Verify that you can see it (the drive name will be NUCLEO).
@@ -71,8 +70,6 @@ void onPirTimeout() {
 }
 
 void pir_rise() {
-  printf("Movement detected\r\n");
-
   // Set the color to green
   rgbLed.setColorRGB(0, 0x00, 0xff, 0x00);
 
