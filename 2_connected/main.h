@@ -4,11 +4,12 @@
 #include "easy-connect.h"                     // Connectivity driver
 #include "simple-mbed-client.h"               // Load mbed Client
 #include "ChainableLED.h"                     // Driver for the LED
+#include "accelerometer.h"                    // Driver for the accelerometer
 
 SimpleMbedClient client;          // Get a reference to Client
 
 // Our peripherals
-InterruptIn pir(D5);              // Declare the PIR sensor
+Accelerometer accelerometer(10, true); // Declare the accelerometer
 ChainableLED rgbLed(D6, D7, 1);   // Declare the LED (it's chainable!)
 
 // We need a way to signal from an interrupt context -> main thread, use a Semaphore for it...
@@ -87,9 +88,9 @@ void onPirTimeout() {
   }
 }
 
-// When the PIR sensor fires...
-void pir_rise() {
-  printf("PIR Sensor fired\r\n");
+// When the motion sensor fires...
+void movement_detected() {
+  printf("Motion Sensor fired\r\n");
 
   // go back to main thread to update the resource (we can't do this in interrupt context)
   updates.release();
@@ -107,7 +108,9 @@ void pir_rise() {
 
 // Registered callback for mbed Client
 DigitalOut statusLed(LED1, 1);
+bool isRegistered = false;
 void registered() {
+  isRegistered = true;
   statusLed = 0;
 }
 
@@ -116,8 +119,7 @@ int main(int, char**) {
 
   putLightsOff();
 
-  // The PIR sensor uses interrupts, no need to poll
-  pir.rise(&pir_rise);
+  // Motion sensor runs in a separate RTOS thread
 
   // Connect to the internet (using connectivity method from mbed_app.json)
   NetworkInterface* network = easy_connect(true);
@@ -135,6 +137,9 @@ int main(int, char**) {
   }
 
   client.on_registered(&registered);
+  
+  accelerometer.start();
+  accelerometer.change(&movement_detected);
 
   // Main loop. We don't want to do Network operations from ISR
   while (1) {
@@ -142,6 +147,8 @@ int main(int, char**) {
     if (v == 1) {
       pirCount = pirCount + 1;
     }
-    client.keep_alive();
+    if (isRegistered) {
+      client.keep_alive();
+    }
   }
 }

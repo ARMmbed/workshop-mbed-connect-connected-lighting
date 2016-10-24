@@ -18,10 +18,10 @@
             "value": "D2"
         },
         "esp8266-ssid": {
-            "value": "\"mbedconnect\""
+            "value": "\"MIFI-LIBERATE-MBED\""
         },
         "esp8266-password": {
-            "value": "\"Connect2016\""
+            "value": "\"33642678\""
         },
         "esp8266-debug": {
             "value": true
