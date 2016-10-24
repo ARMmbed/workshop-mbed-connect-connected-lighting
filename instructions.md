@@ -55,6 +55,7 @@ We'll run a program that will turn the LED on whenever motion is detected.
 1. Make sure that you have the online compiler open.
 1. Click the Import button, then click **Click Here to import from URL**.
 1. Paste the following URL: https://github.com/ARMmbed/workshop-mbed-connect-connected-lighting
+    * Do **NOT** tick the 'Update libraries' checkbox.
 1. Click the **Import** button.
 1. In the top right corner, verify that the right development board is selected (NUCLEO F411RE).
 
@@ -189,7 +190,8 @@ We can now control the device from the mbed Device Connector API Console. In the
 
 We can interact with these variables through the [API Console](https://connector.mbed.com/#console).
 
-1. In the API Console select 'GET /endpoints/{endpoint-name}/{resource-path}'.
+1. In the API Console select 'Endpoint directory lookup'.
+1. Select 'GET /endpoints/{endpoint-name}/{resource-path}'.
 1. Under 'endpoint' select your device.
 1. Under 'resource-path' select '/pir/0/count'.
 1. Click **TEST API**.
@@ -201,7 +203,7 @@ We can also write new values to the device.
 
 1. Select the 'PUT' tab.
 1. Under 'resource-path' select '/led/0/permanent_status'.
-1. Under 'PUT Data' put '1'.
+1. Under the *PUT Data tab* put '1'.
 1. Click **TEST API**.
 1. Verify that the LED is now on.
 1. Change back to 'Parameters'.
